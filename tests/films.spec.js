@@ -7,7 +7,7 @@ const {
   orderByYear,
   moviesAverageByCategory,
   hoursToMinutes,
-  bestFilmOfYear,
+  bestFilmOfYear
 } = require('../src/films');
 
 // Exercise 1
@@ -94,7 +94,6 @@ describe('Function "getMoviesFromDirector"', () => {
       }
     ]);
   });
-
 });
 
 // Exercise 3
@@ -104,7 +103,9 @@ describe('Function "moviesAverageOfDirector"', () => {
   });
 
   it('should return a number', () => {
-    expect(typeof moviesAverageOfDirector(movies, 'Stanley Kubrick')).toBe('number');
+    expect(typeof moviesAverageOfDirector(movies, 'Stanley Kubrick')).toBe(
+      'number'
+    );
   });
 
   it('should be different from NaN', () => {
@@ -112,34 +113,38 @@ describe('Function "moviesAverageOfDirector"', () => {
   });
 
   it(' should return the average score of movies selecting only the director films. With 2 decimals! ', () => {
-    expect(moviesAverageOfDirector([
-      {
-        title: 'Paths of Glory',
-        year: 1957,
-        director: 'Stanley Kubrick',
-        duration: '1h 28min',
-        genre: ['Drama', 'War'],
-        score: 8.4
-      },
-      {
-        title: 'Django Unchained',
-        year: 2012,
-        director: 'Quentin Tarantino',
-        duration: '2h 45min',
-        genre: ['Drama', 'Western'],
-        score: 8.4
-      },
-      {
-        title: 'Pulp Fiction',
-        year: 1994,
-        director: 'Quentin Tarantino',
-        duration: '2h 34min',
-        genre: ['Crime', 'Drama'],
-        score: 8.9
-      }
-    ], 'Quentin Tarantino')).toBe(8.65);
+    expect(
+      moviesAverageOfDirector(
+        [
+          {
+            title: 'Paths of Glory',
+            year: 1957,
+            director: 'Stanley Kubrick',
+            duration: '1h 28min',
+            genre: ['Drama', 'War'],
+            score: 8.4
+          },
+          {
+            title: 'Django Unchained',
+            year: 2012,
+            director: 'Quentin Tarantino',
+            duration: '2h 45min',
+            genre: ['Drama', 'Western'],
+            score: 8.4
+          },
+          {
+            title: 'Pulp Fiction',
+            year: 1994,
+            director: 'Quentin Tarantino',
+            duration: '2h 34min',
+            genre: ['Crime', 'Drama'],
+            score: 8.9
+          }
+        ],
+        'Quentin Tarantino'
+      )
+    ).toBe(8.65);
   });
-
 });
 
 // Exercise 4
@@ -293,8 +298,76 @@ describe('Function "orderByYear"', () => {
 // Exercise 6
 // YOUR CODE HERE. Test moviesAverageByCategory()
 describe('Function "moviesAverageByCategory"', () => {
-  it('ADD YOUR CODE IN films.spec.js file', () => {
-    expect(typeof hoursToMinutes).toBe('coffee');
+  it('Debe ser declarada', () => {
+    expect(typeof moviesAverageByCategory).toBe('function');
+  });
+
+  it('Deberia retornar un number', () => {
+    const movies = [
+      { title: 'The Godfather', genre: ['Crime', 'Drama'], score: 9.2 },
+      { title: 'The Godfather: Part II', genre: ['Action', 'Drama'], score: 9 }
+    ];
+    expect(typeof moviesAverageByCategory(movies, 'Drama')).toBe('number');
+  });
+
+  it('Debe retornar el promedio correcto cuando se pase un género existente', () => {
+    const movies = [
+      {
+        title: 'The Shawshank Redemption',
+        genre: ['Crime', 'Action'],
+        score: 9.3
+      },
+      { title: 'The Godfather', genre: ['Crime', 'Drama'], score: 9.2 },
+      { title: 'The Godfather: Part II', genre: ['Action', 'Drama'], score: 9 },
+      {
+        title: 'The Dark Knight',
+        genre: ['Action', 'Crime', 'Drama', 'Thriller'],
+        score: 9
+      }
+    ];
+    expect(moviesAverageByCategory(movies, 'Action')).toBe(9.1); // Promedio de (9.3 + 9 + 9) / 3 = 9.1
+  });
+
+  it('Debe retornar 0 si no encuentra un género', () => {
+    const movies = [
+      {
+        title: 'The Shawshank Redemption',
+        genre: ['Crime', 'Action'],
+        score: 9.3
+      },
+      { title: 'The Godfather', genre: ['Crime', 'Drama'], score: 9.2 }
+    ];
+    expect(moviesAverageByCategory(movies, 'Ficcion')).toBe(0);
+  });
+
+  it('Debe ignorar películas sin la propiedad "score"', () => {
+    const movies = [
+      { title: 'The Shawshank Redemption', genre: ['Action'], score: 9.3 },
+      { title: 'Untitled Movie', genre: ['Action'] }, // No tiene score
+      { title: 'The Dark Knight', genre: ['Action', 'Drama'], score: 9 }
+    ];
+    expect(moviesAverageByCategory(movies, 'Action')).toBe(9.15); // Promedio de (9.3 + 9) / 2 = 9.15
+  });
+
+  it('Debe ignorar películas sin la propiedad "genre"', () => {
+    const movies = [
+      { title: 'The Shawshank Redemption', genre: ['Drama'], score: 9.3 },
+      { title: 'Random Movie', score: 7.5 }, // No tiene género
+      { title: 'The Godfather', genre: ['Drama'], score: 9.2 }
+    ];
+    expect(moviesAverageByCategory(movies, 'Drama')).toBe(9.25); // Promedio de (9.3 + 9.2) / 2 = 9.25
+  });
+
+  it('Debe retornar 0 si se pasa un array vacío', () => {
+    expect(moviesAverageByCategory([], 'Drama')).toBe(0);
+  });
+
+  it('Debe retornar 0 si ninguna película tiene la propiedad "score"', () => {
+    const movies = [
+      { title: 'Untitled Movie 1', genre: ['Drama'] },
+      { title: 'Untitled Movie 2', genre: ['Drama'] }
+    ];
+    expect(moviesAverageByCategory(movies, 'Drama')).toBe(0);
   });
 });
 
@@ -371,7 +444,7 @@ describe('Function "bestFilmOfYear"', () => {
         duration: '1h 28min',
         genre: ['Drama', 'War'],
         score: 5
-      },
+      }
     ];
     expect(bestFilmOfYear(testArr, 1957)).toEqual([
       {
@@ -384,5 +457,4 @@ describe('Function "bestFilmOfYear"', () => {
       }
     ]);
   });
-
 });
